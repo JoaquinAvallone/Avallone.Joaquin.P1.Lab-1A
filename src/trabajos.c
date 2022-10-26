@@ -6,6 +6,34 @@
 #include "validaciones.h"
 #include "trabajos.h"
 
+
+int hardcodearTrabajos(int* pId, eTrabajo vec[],int tam, int cant)
+{
+	int retorno =  0;
+	eTrabajo almacenTrabajos[] = {
+							{1,103,20003,{23,10,2022},0},
+						    {2,105,20002,{20,10,2022},0},
+						    {3,102,20003,{17,10,2022},0},
+						    {4,100,20001,{26,10,2022},0},
+						    {5,104,20002,{27,10,2022},0},
+					        {6,101,20003,{24,10,2022},0},
+						    {7,106,20001,{23,10,2022},0}
+			};
+
+	if(vec!=NULL && tam>0 && cant<=tam && cant<=7)
+	{
+		for(int i=0; i<cant; i++)
+		{
+			vec[i] = almacenTrabajos[i];
+			*pId = *pId + 1;
+		}
+
+		retorno = 1;
+	}
+
+	return retorno;
+}
+
 int listarServicios(eServicio servicios[], int tamS)
 {
 	int retorno = 0;
@@ -18,7 +46,7 @@ int listarServicios(eServicio servicios[], int tamS)
 				"| Lista de Servicios |\n"
 				"======================\n");
 		printf( "|Servicios | Precios |\n"
-				"----------------------\n");
+				"======================\n");
 
 		for(int i = 0 ; i < tamS ; i++)
 		{
@@ -36,7 +64,6 @@ int mostrarServicios(eServicio servicios[], int tamS)
 
 	if(servicios != NULL && tamS > 0)
 	 {
-		limpiarConsola();
 
 		printf( "================================\n"
 				"        Lista de Servicios     |\n"
@@ -97,6 +124,7 @@ int altaTrabajo(int* pId, eTrabajo trabajos[], int tamT, eAuto autos[],int tamA,
 {
 	int retorno = 0;
 	int indice;
+	int flag = 1;
 	eTrabajo auxTrabajo;
 
 	if(pId!=NULL && trabajos!=NULL && tamT>0 && autos!=NULL && tamA>0 && servicios!=NULL && tamS>0)
@@ -104,17 +132,31 @@ int altaTrabajo(int* pId, eTrabajo trabajos[], int tamT, eAuto autos[],int tamA,
 		limpiarConsola();
 		printf("              ***ALTA TRABAJOS***\n\n");
 		buscarLibreTrabajo(&indice, trabajos, tamT);
-		if(indice==-1)
+		for(int i = 0; i<tamA; i++)
 		{
-			printf("No hay lugar disponible\n");
+			if(!autos[i].isEmpty)
+			{
+				flag = 0;
+			}
+		}
+		if(flag)
+		{
+			printf("No hay autos en el sistema.\n");
 		}
 		else
 		{
-			cargarTrabajo(&auxTrabajo, autos, tamA, servicios, tamS, marcas, tamM, colores, tamC);
-			auxTrabajo.id = *pId;
-			*pId = *pId+1;
-			trabajos[indice] = auxTrabajo;
-			retorno = 1;
+			if(indice==-1)
+			{
+				printf("No hay lugar en el sistema para mas trabajos\n");
+			}
+			else
+			{
+				cargarTrabajo(&auxTrabajo, autos, tamA, servicios, tamS, marcas, tamM, colores, tamC);
+				auxTrabajo.id = *pId;
+				*pId = *pId+1;
+				trabajos[indice] = auxTrabajo;
+				retorno = 1;
+			}
 		}
 
 	}
@@ -129,7 +171,7 @@ int cargarTrabajo(eTrabajo* pTrabajo, eAuto autos[],int tamA, eServicio servicio
 	int auxMes;
 	int auxAnio;
 
-	if(pTrabajo!=NULL && autos!=NULL && tamA>0 && servicios!=NULL && tamS>0)
+	if(pTrabajo!=NULL && autos!=NULL && tamA>0 && servicios!=NULL && tamS>0 && marcas!=NULL && tamM>0 && colores!=NULL && tamS>0)
 	{
 
 		mostrarAutos(autos, tamA, marcas, tamM, colores, tamC, 0);
@@ -180,19 +222,17 @@ int cargarTrabajo(eTrabajo* pTrabajo, eAuto autos[],int tamA, eServicio servicio
 
 void mostrarTrabajo(eTrabajo trabajos, eAuto autos[],int tamA, eServicio servicios[],int tamS, eMarca marcas[], int tamM)
 {
-	int auxIdAuto;
 	int auxIdMarca;
 	char auxMarca[20];
 	char auxServicio[20];
 
-	cargarIdAuto(trabajos.idAuto, &auxIdAuto, autos, tamA);
 	cargarIdMarca(trabajos.idAuto, &auxIdMarca, autos, tamA);
 	cargarDescripcionMarca(auxIdMarca, auxMarca, marcas, tamM);
 	cargarDescripcionServicio(trabajos.idServicio, auxServicio, servicios, tamS);
 
-	printf(" %d     %d     %-9s      %-8s   %02d/%02d/%d|\n",
+	printf(" %d     %d      %-9s    %-8s    %02d/%02d/%d|\n",
 						trabajos.id,
-						auxIdAuto,
+						trabajos.idAuto,
 						auxMarca,
 						auxServicio,
 						trabajos.fecha.dia,
@@ -228,7 +268,7 @@ int mostrarTrabajos(eTrabajo vec[],int tamT, eAuto autos[],int tamA, eServicio s
 		}
 		if(flag)
 		{
-			printf("  No hay Trabajos en el sistema\n");
+			printf("         No hay Trabajos en el sistema\n");
 		}
 
 	}
@@ -255,17 +295,17 @@ int cargarDescripcionServicio(int id, char descripcion[], eServicio vec[], int t
  return retorno;
 }
 
-int cargarIdAuto(int id, int* descripcion, eAuto vec[], int tam)
+int cargarIdAuto(int id, int* pId, eAuto vec[], int tam)
 {
  int retorno = 0;
 
- if(descripcion != NULL && vec != NULL && tam > 0)
+ if(pId != NULL && vec != NULL && tam > 0)
  {
     for(int i = 0 ; i < tam ; i++)
     {
         if(vec[i].id == id)
         {
-            *descripcion = vec[i].id;
+            *pId = vec[i].id;
             break;
         }
     }
@@ -275,17 +315,17 @@ int cargarIdAuto(int id, int* descripcion, eAuto vec[], int tam)
  return retorno;
 }
 
-int cargarIdMarca(int id, int* descripcion, eAuto vec[], int tam)
+int cargarIdMarca(int id, int* pId, eAuto vec[], int tam)
 {
  int retorno = 0;
 
- if(descripcion != NULL && vec != NULL && tam > 0)
+ if(pId != NULL && vec != NULL && tam > 0)
  {
     for(int i = 0 ; i < tam ; i++)
     {
         if(vec[i].id == id)
         {
-            *descripcion = vec[i].idMarca;
+            *pId = vec[i].idMarca;
             break;
         }
     }

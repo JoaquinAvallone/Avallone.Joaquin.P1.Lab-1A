@@ -68,7 +68,7 @@ void pausa();
 /// @param tam tamaño del vector
 /// @param cant cantidad de autos a hardcodear
 /// @return retorna 1 en caso de que los parametros aean distintos de null y tam sea mayo a 0, de lo contrario retorna 0
-int harcodearAutos(int* pLegajo, eAuto vec[],int tam, int cant);
+int hardcodearAutos(int* pLegajo, eAuto vec[],int tam, int cant);
 
 /// @brief Imprime el menu de opciones y te pide el ingreso de una opcion
 ///
@@ -89,6 +89,15 @@ int inicializarAutos(eAuto vec[], int tam);
 /// @param tam tamaño del vector
 /// @return retorna 1 si los parametros son distintos de nul y si el tam es mayo a 0, de lo contrario retorna 0
 int buscarLibre(int * pIndice, eAuto vec[], int tam);
+
+
+/// @brief
+///
+/// @param pFlag
+/// @param vec
+/// @param tam
+/// @return
+int buscarOcupado(int * pFlag, eAuto vec[], int tam);
 
 
 /// @brief busca el indice en el que el vector este libre, de ser asi te manda a cargar la carga de datos
@@ -192,7 +201,7 @@ int ordenarAutos(eAuto vec[], int tam);
 int buscarIdAuto(int* pIndice, int patente, eAuto autos[], int tamA);
 int modificarAuto( eAuto autos[], int tamA, eMarca marcas[], int tamM, eColor colores[], int tamC);
 int menuModificacionAuto();
-int bajaAuto( eAuto vec[], int tamA, eMarca marcas[], int tamM, eColor colores[], int tamC);
+int bajaAuto( eAuto vec[], int tamA, eMarca marcas[], int tamM, eColor colores[], int tamC, eTrabajo trabajos[], int tamT);
 int listarMarcas(eMarca marcas[], int tamM);
 int listarColores(eColor colores[], int tamC);
 

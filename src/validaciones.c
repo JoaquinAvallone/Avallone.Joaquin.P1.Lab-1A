@@ -130,7 +130,7 @@ int validarFecha(int valorDia, int valorMes, int valorAnio)
 	int fechaCorrecta = 0;
 
 
-	    if ( valorMes >= 1 && valorMes <= 12 )
+	    if ( valorMes >= 1 && valorMes <= 12 && valorAnio>=2022)
 	    {
 	        switch ( valorMes )
 	        {
